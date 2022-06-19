@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="project.virus.graduate.library.repository.LoginRepository">
+  <!-- 用户登录sql -->
+    <select id="loginValidator" resultType="Integer">
+    SELECT
+     userid
+    FROM
+      user
+    WHERE
+      account = #{account, jdbcType=INTEGER}
+    AND
+      password = #{password, jdbcType=VARCHAR}
+  </select>
+    <select id="relogin" resultType="User">
+    SELECT
+     *
+    FROM
+      user
+    WHERE
+      account = #{account, jdbcType=INTEGER}
+  </select>
+      <select id="emailLogin" resultType="User">
+    SELECT
+     *
+    FROM
+      user
+    WHERE
+      email = #{email, jdbcType=VARCHAR}
+  </select>
+</mapper>

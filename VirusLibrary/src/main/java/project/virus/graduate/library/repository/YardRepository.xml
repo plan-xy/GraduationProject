@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="project.virus.graduate.library.repository.YardRepository">
+ 
+ <select id="getTalkyardEntities" resultType="briefyard">
+  SELECT 
+talkyard.yardid,
+talkyard.subject,
+talkyard.head,
+talkyard.level,
+talkyard.eyenum,
+talkyard.foundtime
+FROM viruslibrary.talkyard
+where talkyard.disableflag = false
+order by yardid desc
+limit #{start,jdbcType=INTEGER} , #{end,jdbcType=INTEGER}
+ </select>
+ 
+ <select id="getTalkyardEntity" resultType="Talkyard">
+ SELECT 
+talkyard.yardid,
+talkyard.subject,
+talkyard.head,
+talkyard.content,
+talkyard.level,
+talkyard.eyenum,
+talkyard.foundtime,
+talkyard.authorid,
+user.nickname,
+user.useravater
+FROM viruslibrary.talkyard
+left join(
+select
+user.userid,
+user.nickname,
+user.useravater
+from viruslibrary.user
+) as user
+on talkyard.authorid = user.userid
+where yardid =#{id,jdbcType=INTEGER }
+ </select>
+ 
+ <select id="getToyardEntities" resultType="toyard">
+SELECT 
+toyard.toid,
+toyard.content,
+toyard.yardid,
+toyard.yardtime,
+toyard.authorid,
+toyard.towhoid,
+user.user.nickname,
+user.email,
+user.useravater
+FROM viruslibrary.toyard
+left join (
+select 
+user.userid,
+user.nickname,
+user.email,
+user.useravater
+from viruslibrary.user
+) as user
+on user.userid = toyard.authorid
+where toyard.yardid =#{id,jdbcType=INTEGER }
+ </select>
+ 
+ <select id="Page" resultType="Page">
+select Count(yardid) as count
+from talkyard
+where disableflag = false
+</select>
+
+   <update id="addEyeNum">
+update viruslibrary.talkyard
+set	eyenum = eyenum + 1
+where yardid =  #{id,jdbcType=INTEGER}
+  </update>
+  
+  <insert id="release">
+ INSERT INTO viruslibrary.talkyard 
+(subject, head, content, authorid, level,disableflag) 
+VALUES 
+(
+ #{subject,jdbcType=VARCHAR},
+ #{head,jdbcType=VARCHAR},
+ #{content,jdbcType=VARCHAR},
+ #{authorid,jdbcType=INTEGER},
+ #{level,jdbcType=INTEGER},
+ '1'
+ );
+  </insert>
+  
+  <insert id="insertcomment">
+   INSERT INTO viruslibrary.toyard 
+(content, yardid, authorid, towhoid) 
+VALUES 
+(
+ #{content,jdbcType=VARCHAR},
+ #{yardid,jdbcType=INTEGER},
+ #{authorid,jdbcType=INTEGER},
+ #{towhoid,jdbcType=INTEGER}
+ );
+  </insert>
+  
+  <insert id="pinyard">
+ INSERT INTO viruslibrary.yardhistory 
+(userid, yardid,fav) 
+VALUES 
+(
+ #{userid,jdbcType=INTEGER},
+ #{yardid,jdbcType=INTEGER},
+'1'
+ );
+  </insert >
+  
+  <delete id="Notpinyard">
+  delete from yardhistory
+where userid = #{userid,jdbcType=INTEGER}
+and 
+yardid =#{yardid,jdbcType=INTEGER}
+  </delete>
+
+<select id="Ispin"  resultType="Integer">
+SELECT * FROM viruslibrary.yardhistory
+where userid = #{userid,jdbcType=INTEGER} 
+and yardid= #{yardid,jdbcType=INTEGER}
+and fav=1
+</select>
+
+<select id="getYardPic" resultType="yardPic">
+select  * from libpic
+where storyid = #{id,jdbcType=INTEGER}
+</select>
+ </mapper>

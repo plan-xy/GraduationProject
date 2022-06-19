@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="project.virus.graduate.library.repository.StoryRepository">
+
+	<select id="getBriefstoryEntities" resultType="briefstory">
+		select
+		library.storyid,
+		library.virusid,
+		library.title,
+        left(library.content,15)as content,
+        library.starttime,
+		libpic.pic
+		from library
+		left join(
+		select *
+		from libpic
+		where picid
+		in
+		(
+		select min(picid)
+		from libpic
+		group by storyid
+		)
+		) as libpic
+		on library.storyid = libpic.storyid
+		where library.disableflag = false
+		limit #{start,jdbcType=INTEGER} , #{end,jdbcType=INTEGER}
+	</select>
+	<select id="getselectedstory" resultType="briefstory">
+		select
+		library.storyid,
+		library.title,
+		library.virusid,
+		library.content,
+		libpic.pic
+		from library
+		left join(
+		select *
+		from libpic
+		where picid
+		in
+		(
+		select min(picid)
+		from libpic
+		group by storyid
+		)
+		) as libpic
+		on library.storyid = libpic.storyid
+		<where>
+			library.disableflag = false
+			<if test="title != null and title !='' ">
+				AND library.title like concat('%',#{title ,jdbcType =
+				VARCHAR},'%')
+			</if>
+			<if test="storyid != null and storyid !='' ">
+				AND library.storyid like concat('%',#{storyid,jdbcType = INTEGER},'%')
+			</if>
+			<if test="virusid != null and virusid !=''  ">
+				AND library.virusid like concat('%',#{virusid,jdbcType = INTEGER},'%')
+			</if>
+		</where>
+	</select>
+
+	<select id="getLibraryEntity" resultType="Library">
+		select
+		library.storyid,
+		library.virusid,
+		library.title,
+		library.content
+		from library
+		where library.disableflag = false
+		and library.storyid=#{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="getlibLibraryPicEntities" resultType="LibPic">
+		select
+		libpic.picid,
+		libpic.storyid,
+		libpic.pic
+		from libpic
+		where libpic.disableflag = false
+		and libpic.storyid=#{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="Page" resultType="Page">
+	select Count(storyid) as count
+		from library
+	where disableflag = false
+	</select>
+	
+	<select  id="getArrayStory"  resultType="briefstory" >
+		SELECT 
+		library.storyid,
+		library.virusid,
+		library.title,
+        left(library.content,15)as content
+		FROM viruslibrary.library
+		<where>
+		virusid in 
+			<foreach item="item" index="index" collection="list"  separator="," open="(" close=")">
+				#{item}
+			</foreach>
+		</where>
+	</select>
+	
+</mapper>

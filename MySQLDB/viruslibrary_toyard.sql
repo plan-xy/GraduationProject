@@ -1,0 +1,59 @@
+-- MySQL dump 10.13  Distrib 8.0.27, for Win64 (x86_64)
+--
+-- Host: localhost    Database: viruslibrary
+-- ------------------------------------------------------
+-- Server version	8.0.27
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `toyard`
+--
+
+DROP TABLE IF EXISTS `toyard`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `toyard` (
+  `toid` int unsigned NOT NULL AUTO_INCREMENT,
+  `content` varchar(45) DEFAULT NULL,
+  `yardid` int DEFAULT NULL,
+  `yardtime` datetime DEFAULT CURRENT_TIMESTAMP,
+  `authorid` int DEFAULT NULL,
+  `towhoid` int DEFAULT NULL,
+  `disableflag` tinyint unsigned DEFAULT '0',
+  `foundtime` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`toid`),
+  KEY `talk_yard_idx` (`yardid`),
+  CONSTRAINT `talk_yard` FOREIGN KEY (`yardid`) REFERENCES `talkyard` (`yardid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `toyard`
+--
+
+LOCK TABLES `toyard` WRITE;
+/*!40000 ALTER TABLE `toyard` DISABLE KEYS */;
+INSERT INTO `toyard` VALUES (31,'今天',384,'2022-05-21 17:38:17',1,0,0,'2022-05-21 17:38:17'),(32,'昨天的事情',384,'2022-05-21 17:38:29',1,31,0,'2022-05-21 17:38:29'),(33,'明天',384,'2022-05-21 17:38:35',1,0,0,'2022-05-21 17:38:35'),(34,'后天',384,'2022-05-21 17:40:51',1,33,0,'2022-05-21 17:40:51'),(35,'大后天',384,'2022-05-21 17:41:19',1,33,0,'2022-05-21 17:41:19'),(36,'大大大后天',384,'2022-05-21 17:41:59',1,33,0,'2022-05-21 17:41:59'),(40,'丁香医生团队？',383,'2022-05-31 20:55:47',1,0,0,'2022-05-31 20:55:47'),(41,'dea',379,'2022-06-01 09:25:27',18,0,1,'2022-06-01 09:25:27');
+/*!40000 ALTER TABLE `toyard` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2022-06-02 15:56:08

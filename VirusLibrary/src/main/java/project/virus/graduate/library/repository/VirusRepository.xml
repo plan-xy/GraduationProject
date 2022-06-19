@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="project.virus.graduate.library.repository.VirusRepository">
+  <select id="virusInfo" resultType="Virus">
+SELECT 
+virus.virusid,
+virus.name,
+virus.subname,
+virus.introduction,
+virus.foundtime,
+virus.shape,
+virus.structbuild,
+virus.way,
+virus.fight,
+virus.deathmount,
+virus.deathrate,
+virus.eyenum,
+virus.disease,
+virus.foundtime,
+virus.R,
+virus.infection
+FROM viruslibrary.virus 
+where virusid = #{id,jdbcType=INTEGER}
+AND virus.disableflag = false;
+  </select>
+  <select id="briefvirusInfo" resultType="briefvirus">
+ select 
+virus.virusid,
+virus.name,
+virus.shape,
+virus.structbuild,
+virus.way,
+virus.eyenum,
+viruspic.pic
+from
+virus 
+LEFT join ( 
+SELECT * 
+FROM viruslibrary.viruspic 
+where picid 
+in 
+(
+select min(picid)
+from viruslibrary.viruspic 
+group by virusid
+)
+) as viruspic
+on virus.virusid = viruspic.virusid
+where  virus.disableflag = false
+limit #{start,jdbcType=INTEGER} , #{end,jdbcType=INTEGER}
+  </select>
+  <select id="selectedvirus"  resultType="briefvirus">
+  select 
+virus.virusid,
+virus.name,
+virus.shape,
+virus.structbuild,
+virus.way,
+virus.eyenum,
+viruspic.pic
+from virus 
+LEFT join ( 
+SELECT * 
+FROM viruslibrary.viruspic 
+where picid 
+in 
+(
+select min(picid)
+from viruslibrary.viruspic 
+group by virusid
+)
+) as viruspic
+on virus.virusid = viruspic.virusid
+<where>
+	<if test="name != null and name !='' ">
+			 virus.name  LIKE CONCAT('%', #{name, jdbcType=VARCHAR}, '%')
+	</if>
+		<if test="shape != null  and  shape !=''  ">
+		AND  virus.shape  LIKE CONCAT('%', #{shape, jdbcType=VARCHAR}, '%')
+	</if>
+		<if test="structbuild != null  and   structbuild  !=''   ">
+		AND  virus.structbuild  LIKE CONCAT('%', #{structbuild, jdbcType=VARCHAR}, '%')
+	</if>
+	<if test="way != null  and  way !=''   ">
+		AND  virus.way  LIKE CONCAT('%', #{way, jdbcType=VARCHAR}, '%')
+	</if>
+	<if test="1==1">
+	AND virus.disableflag = false
+	</if>
+</where>
+limit #{page,jdbcType=INTEGER} , #{limit,jdbcType=INTEGER}  
+  </select>
+  <select id="getVirusPic" resultType="VirusPic">
+  select 
+viruspic.picid,
+viruspic.virusid,
+viruspic.pic
+from viruspic
+where viruspic.virusid = #{id,jdbcType=INTEGER}
+and viruspic.disableflag = false 
+  </select>
+  
+  <select id="Page" resultType="Page">
+select Count(virusid) as count
+from virus
+where disableflag = false
+</select>
+    <select id="getShapeType" resultType="Type">
+SELECT 
+	shape as Type
+FROM viruslibrary.virus 
+group by  shape
+  </select>
+      <select id="getStructType" resultType="Type">
+SELECT 
+	structbuild as Type
+FROM viruslibrary.virus 
+group by  structbuild
+  </select>
+  
+  <update id="addEyeNum">
+update virus
+set	eyenum = eyenum + 1
+where virusid =  #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

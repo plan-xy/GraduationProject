@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="project.virus.graduate.library.repository.DataRepository">
+<select id="getFrontChartdata"  resultType="frontchart">
+SELECT cast(virus.deathrate as double) as deathrate , 
+		virus.name,
+        virus.disease,
+        virus.virusid
+FROM viruslibrary.virus 
+where disableflag =false 
+order by deathrate desc
+limit 5;
+</select>
+<select id="rankEyenum" resultType="rankResult">
+SELECT 
+virusid,
+name,
+subname,
+disease,
+deathrate,
+R,
+eyenum
+FROM viruslibrary.virus
+where disableflag = false
+order by eyenum desc
+limit 5
+</select>
+<select id="rankR" resultType="rankResult">
+SELECT 
+virusid,
+name,
+subname,
+disease,
+deathrate,
+R,
+eyenum
+FROM viruslibrary.virus
+where disableflag = false
+order by R desc
+limit 5
+</select>
+<select id="rankRate" resultType="rankResult">
+SELECT 
+virusid,
+name,
+subname,
+disease,
+deathrate,
+R,
+eyenum
+FROM viruslibrary.virus
+where disableflag = false
+order by deathrate desc
+limit 5
+</select>
+</mapper>

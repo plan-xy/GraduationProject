@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="project.virus.graduate.library.repository.NewsRepository">
+<select id="getNews"  resultType="News">
+SELECT 
+news.newsid,
+news.subject,
+news.sort,
+news.eyenum,
+news.head,
+news.content,
+news.authorid,
+news.like,
+news.createlogtime
+FROM viruslibrary.news
+where viruslibrary.news.newsid = #{id,jdbcType=INTEGER}
+</select>
+
+  <select id="getItems" resultType="NewsItem">
+		SELECT 
+news.newsid,
+news.subject,
+news.sort,
+news.eyenum,
+news.head,
+news.authorid,
+news.like,
+news.foundtime,
+newspic.pic
+FROM viruslibrary.news
+LEFT join (
+SELECT * 
+FROM viruslibrary.newspic 
+where picid 
+in 
+(
+select min(picid)
+from viruslibrary.newspic 
+group by newsid
+)
+) as newspic
+on news.newsid = newspic.newsid
+where news.disableflag  = false
+limit #{start,jdbcType=INTEGER} , #{end,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getNewsPicEntities" resultType="NewsPic">
+  select
+newspic.picid,
+newspic.newsid,
+newspic.pic
+from newspic
+where newspic.newsid=#{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="Page" resultType="Page">
+  select Count(newsid) as count
+  from news
+  where disableflag = false
+  
+  </select>
+     <update id="addEyeNum">
+update viruslibrary.news
+set	eyenum = eyenum + 1
+where newsid =  #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

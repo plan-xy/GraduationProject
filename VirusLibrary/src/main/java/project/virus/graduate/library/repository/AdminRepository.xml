@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="project.virus.graduate.library.repository.AdminRepository">
+<select id="checkComment"   resultType="Comment">
+SELECT toyard.toid,
+toyard.content,
+toyard.authorid,
+toyard.towhoid,
+talkyard.subject,
+toyard.disableflag
+FROM viruslibrary.toyard
+left join(
+select yardid,subject from talkyard
+) as talkyard
+on talkyard.yardid =toyard.yardid
+</select>
+
+<update id="adminCommentDis">
+	update toyard
+	set
+		disableflag = 1
+			<where>
+		toid  in 
+			<foreach item="item" index="index" collection="list"  separator="," open="(" close=")">
+				#{item}
+			</foreach>
+		</where>
+</update>
+<update id="adminCommentUn">
+	update toyard
+	set
+		disableflag = 0
+			<where>
+		toid  in 
+			<foreach item="item" index="index" collection="list"  separator="," open="(" close=")">
+				#{item}
+			</foreach>
+		</where>
+</update>
+
+<select id="checkYard"   resultType="showYard">
+SELECT  
+yardid,
+subject,
+head,
+content,
+level,
+eyenum,
+authorid,
+user.nickname,
+useravater,
+disableflag
+FROM viruslibrary.talkyard
+left join(
+select 
+userid,
+nickname,
+useravater
+from user 
+)as user
+on user.userid = talkyard.authorid
+</select>
+<update id="adminYardDis">
+	update talkyard
+	set
+		disableflag = 1
+			<where>
+		yardid  in 
+			<foreach item="item" index="index" collection="list"  separator="," open="(" close=")">
+				#{item}
+			</foreach>
+		</where>
+</update>
+<update id="adminYardUn">
+	update talkyard
+	set
+		disableflag = 0
+			<where>
+		yardid  in 
+			<foreach item="item" index="index" collection="list"  separator="," open="(" close=")">
+				#{item}
+			</foreach>
+		</where>
+</update>
+<update id="clickyardDis">
+	update talkyard
+	set disableflag = 1
+	where
+		yardid = #{id,jdbcType=INTEGER}
+</update>
+<update id="clickyardUn">
+	update talkyard
+	set disableflag = 0
+	where
+		yardid = #{id,jdbcType=INTEGER}
+</update>
+<update id="clickComDis">
+	update toyard
+	set disableflag = 1
+	where
+		toid = #{id,jdbcType=INTEGER}
+</update>
+<update id="clickComUn">
+	update toyard
+	set disableflag = 1
+	where
+		toid= #{id,jdbcType=INTEGER}
+</update>
+
+<select id="checkUser" resultType="showUser">
+	select * from user
+</select>
+
+<update id="adminUserDis">
+update user
+set disableflag = 1
+where userid = #{id,jdbcType=INTEGER}
+</update>
+
+<update id="adminUserUn">
+update user
+set disableflag = 0
+where userid = #{id,jdbcType=INTEGER}
+</update>
+
+<update id="userUp">
+update user
+set grade = 2
+where userid =#{id,jdbcType=INTEGER}
+</update>
+
+<update id="userDown">
+update user
+set grade = 1
+where userid =#{id,jdbcType=INTEGER}
+</update>
+
+<select id="checkVirus"  resultType="showVirus">
+select * from virus
+</select>
+<select id="checklibrary"  resultType="showlibrary">
+select * from library
+</select>
+
+<update id="updateVirus">
+
+</update>
+
+<update id="updatelibrary">
+
+</update>
+</mapper>

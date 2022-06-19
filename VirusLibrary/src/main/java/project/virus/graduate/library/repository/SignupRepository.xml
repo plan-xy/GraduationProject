@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="project.virus.graduate.library.repository.SignupRepository">
+
+<insert  id="signup">
+	  INSERT INTO viruslibrary.user 
+(nickname,
+ gender,
+ birthday, 
+ career, 
+ grade,
+ account, 
+ password, 
+ email,
+ phone,
+ useravater
+ ) 
+VALUES 
+( #{nickname, jdbcType=VARCHAR},
+ #{gender, jdbcType=VARCHAR},
+ #{birthday, jdbcType=DATE},
+ #{career, jdbcType=VARCHAR},
+ '1' ,
+ #{account, jdbcType=INTEGER} ,
+ #{password, jdbcType=VARCHAR} , 
+ #{email, jdbcType=VARCHAR} ,
+ #{phone,jdbcType=VARCHAR},
+ 'https://img1.imgtp.com/2022/04/29/eicyZb6R.jpg'
+  );
+
+</insert>
+<select  id="testemail"  resultType="Integer" >
+SELECT userid FROM viruslibrary.user
+where email =  #{email, jdbcType=VARCHAR} 
+</select>
+</mapper>
